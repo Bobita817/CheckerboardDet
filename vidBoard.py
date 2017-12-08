@@ -10,7 +10,7 @@ objp[:,:2] = np.mgrid[0:9,0:6].T.reshape(-1,2)
 objpoints = [] 
 imgpoints = [] 
 
-video = cv2.VideoCapture("around.mp4")
+video = cv2.VideoCapture("zoom.mp4")
 if not video.isOpened():
     print ("Could not open video")
     sys.exit()
@@ -40,15 +40,15 @@ while True:
                 cv2.THRESH_BINARY,11,2)
         blur = cv2.GaussianBlur(thresh,(5,5),0)
     # Find the chess board corners
-        ret, corners = cv2.findChessboardCorners(gray, (9,6),None)
+        ret, corners = cv2.findChessboardCorners(thresh, (9,6),None)
     # If found, add object points, image points
         if ret == True:
             objpoints.append(objp)
-            corners2=cv2.cornerSubPix(gray,corners, (11,11), (-1,-1), criteria)
+            corners2=cv2.cornerSubPix(thresh,corners, (11,11), (-1,-1), criteria)
             imgpoints.append(corners)
         # Draw and display the corners
-            cv2.drawChessboardCorners(img, (9,6), corners2, ret)
-            cv2.imshow('img', img)
+            cv2.drawChessboardCorners(thresh, (9,6), corners2, ret,)
+            cv2.imshow('img', thresh)
             cv2.waitKey(10)
 
             ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
